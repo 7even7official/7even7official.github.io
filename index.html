@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:title" content="7even7 Official">
+<meta property="og:description" content="Affordable clothes, tech & accessories at the best prices.">
+<meta property="og:image" content="https://i.ibb.co/WjHpMHg/IMG-20260330-163942.png">
+<meta property="og:url" content="https://7even7.github.io">
+<meta property="og:type" content="website">
+<title>7even7 Official</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --gray: #f5f5f5;
+  --muted: #777;
+  --accent: #e63946;
+  --green: #2a9d5c;
+  --radius: 18px;
+  --shadow: 0 10px 40px rgba(0,0,0,0.10);
+  --shadow-hover: 0 20px 60px rgba(0,0,0,0.18);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--black);
+}
+
+/* FLOATING BG */
+.bg { position: fixed; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+.blob {
+  position: absolute;
+  width: 420px; height: 420px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 50%;
+  filter: blur(90px);
+  animation: float 12s infinite alternate ease-in-out;
+}
+.blob:nth-child(1) { top: -120px; left: -100px; }
+.blob:nth-child(2) { bottom: -120px; right: -100px; animation-delay: -5s; }
+.blob:nth-child(3) { top: 40%; left: 40%; width: 250px; height: 250px; animation-delay: -2s; }
+@keyframes float { to { transform: translateY(60px) scale(1.05); } }
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 60px 20px 30px;
+  animation: fadeIn 0.8s ease;
+}
+header img { width: 110px; border-radius: 50%; box-shadow: var(--shadow); }
+header h1 { margin: 14px 0 6px; font-size: 2.4rem; font-weight: 700; letter-spacing: -1px; }
+.tagline { color: var(--muted); font-size: 0.95rem; font-weight: 300; }
+
+/* FEATURED */
+.featured {
+  margin: 20px auto 10px;
+  max-width: 920px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-hover);
+  animation: fadeIn 1s ease;
+  position: relative;
+  cursor: pointer;
+}
+.featured-img-wrap { position: relative; height: 260px; overflow: hidden; background: #ddd; }
+.featured-img-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.featured:hover .featured-img-wrap img { transform: scale(1.04); }
+.featured-badge {
+  position: absolute;
+  top: 18px; left: 18px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 50px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.featured-content {
+  background: white;
+  padding: 22px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.featured-content h2 { font-size: 1.35rem; font-weight: 600; }
+.featured-content p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+.featured-prices { text-align: right; white-space: nowrap; }
+.featured-prices .price { font-size: 1.5rem; font-weight: 700; color: var(--black); }
+.featured-prices .original { font-size: 0.85rem; color: var(--muted); text-decoration: line-through; }
+.featured-prices .discount-badge {
+  display: inline-block;
+  background: #fff3f3;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+/* SECTION TITLE */
+.section-title {
+  text-align: center;
+  padding: 30px 20px 10px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  animation: fadeIn 1s ease;
+}
+
+/* LOADING */
+#loadingState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+  gap: 12px;
+  color: var(--muted);
+}
+.spinner {
+  width: 22px; height: 22px;
+  border: 3px solid #ddd;
+  border-top-color: var(--black);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* GRID */
+#products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  padding: 20px 30px 50px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeUp 0.5s ease both;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+}
+.card-img-wrap { position: relative; overflow: hidden; height: 185px; background: #eee; }
+.card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.card:hover .card-img-wrap img { transform: scale(1.06); }
+.discount-tag {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: var(--accent);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.card-body { padding: 14px 15px 10px; flex: 1; }
+.card-body h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
+.card-body p { color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
+.card-prices {
+  padding: 8px 15px 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.price-now { font-size: 1.1rem; font-weight: 700; color: var(--black); }
+.price-was { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; }
+.price-save {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--green);
+  background: #eafaf1;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.card a {
+  display: block;
+  background: var(--black);
+  color: white;
+  text-align: center;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: background 0.25s;
+}
+.card a:hover { background: #333; }
+
+/* ADMIN BUTTON */
+#adminLoginBtn {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #000, #333);
+  color: white;
+  border: none;
+  font-size: 26px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+#adminLoginBtn:hover { transform: scale(1.1); }
+#adminLoginBtn::after {
+  content: "";
+  position: absolute;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+  animation: pulse 2s infinite;
+  z-index: -1;
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6 }
+  70% { transform: scale(1.7); opacity: 0 }
+  100% { opacity: 0 }
+}
+
+/* FOOTER */
+footer {
+  background: white;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+footer h3 { font-size: 1rem; font-weight: 600; color: var(--black); margin-bottom: 8px; }
+footer b { color: var(--black); }
+
+/* MODAL OVERLAY */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.52);
+  backdrop-filter: blur(7px);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 16px;
+}
+.modal.active { display: flex; }
+
+/* MODAL BOX */
+.modal-box {
+  background: white;
+  padding: 28px 26px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 360px;
+  animation: popIn 0.25s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.92) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+.close-btn {
+  width: auto !important;
+  padding: 5px 11px !important;
+  border-radius: 8px !important;
+  background: #f0f0f0 !important;
+  color: #333 !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.close-btn:hover { background: #e0e0e0 !important; }
+
+/* INPUTS */
+input, textarea, select {
+  width: 100%;
+  padding: 11px 13px;
+  margin: 7px 0;
+  border-radius: 10px;
+  border: 1.5px solid #e5e5e5;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #fafafa;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--black); background: white; }
+textarea { resize: vertical; min-height: 80px; }
+
+label { font-size: 0.78rem; font-weight: 600; color: #555; display: block; margin-top: 10px; }
+
+.price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: var(--black);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+button:hover { background: #333; }
+button.danger { background: #c0392b; }
+button.danger:hover { background: #a93226; }
+
+/* ADMIN MENU BUTTONS */
+.admin-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 5px; }
+
+/* TOAST */
+#toast {
+  position: fixed;
+  bottom: 100px; right: 28px;
+  background: var(--black);
+  color: white;
+  padding: 11px 20px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  z-index: 99999;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+
+@keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeUp  { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  header h1 { font-size: 1.8rem; }
+  #products { padding: 16px; gap: 16px; }
+  .featured-content { flex-direction: column; align-items: flex-start; }
+  .featured-prices { text-align: left; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg">
+  <div class="blob"></div>
+  <div class="blob"></div>
+  <div class="blob"></div>
+</div>
+
+<header>
+  <img src="IMG_20260330_163942.png" alt="7even7 Logo">
+  <h1>7even7 Official</h1>
+  <p class="tagline">100% Trusted website with only affiliate links.</p>
+</header>
+
+<!-- FEATURED -->
+<div class="featured" id="featuredCard" style="display:none;" onclick="featuredClick()">
+  <div class="featured-img-wrap">
+    <img id="featuredImg" src="" alt="Featured Product">
+    <span class="featured-badge">🔥 Featured Pick</span>
+  </div>
+  <div class="featured-content">
+    <div>
+      <h2 id="featuredName"></h2>
+      <p id="featuredDesc"></p>
+    </div>
+    <div class="featured-prices">
+      <div class="price" id="featuredPrice"></div>
+      <div class="original" id="featuredOriginal"></div>
+      <div class="discount-badge" id="featuredDiscount"></div>
+    </div>
+  </div>
+</div>
+
+<p class="section-title">All Products</p>
+
+<div id="loadingState">
+  <div class="spinner"></div>
+  <span>Loading products…</span>
+</div>
+
+<section id="products"></section>
+
+<button id="adminLoginBtn" title="Admin Login">⚙</button>
+
+<div id="toast"></div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Admin Login</h3>
+      <button class="close-btn" onclick="closeModal('loginModal')">✕</button>
+    </div>
+    <label>Email</label>
+    <input id="email" type="email" placeholder="admin@email.com">
+    <label>Password</label>
+    <input id="pass" type="password" placeholder="••••••••">
+    <button onclick="login()">Login</button>
+  </div>
+</div>
+
+<!-- ADMIN MENU -->
+<div id="adminMenu" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Admin Panel</h3>
+      <button class="close-btn" onclick="closeModal('adminMenu')">✕</button>
+    </div>
+    <div class="admin-actions">
+      <button onclick="openAdd()">+ Add Product</button>
+      <button onclick="openEdit()">✏ Edit Product</button>
+      <button class="danger" onclick="openDelete()">🗑 Remove Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div id="addModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Add Product</h3>
+      <button class="close-btn" onclick="closeModal('addModal')">✕</button>
+    </div>
+    <label>Product Name *</label>
+    <input id="addName" placeholder="e.g. Nike Air Max">
+    <label>Image URL *</label>
+    <input id="addImage" placeholder="https://...">
+    <label>Description</label>
+    <textarea id="addDesc" placeholder="Short product description…"></textarea>
+    <label>Affiliate Link *</label>
+    <input id="addLink" placeholder="https://...">
+    <div class="price-row">
+      <div>
+        <label>Current Price *</label>
+        <input id="addPrice" type="number" placeholder="29.99" min="0" step="0.01">
+      </div>
+      <div>
+        <label>Original Price</label>
+        <input id="addOriginal" type="number" placeholder="49.99" min="0" step="0.01">
+      </div>
+    </div>
+    <label>Discount Label (optional)</label>
+    <input id="addDiscount" placeholder="e.g. 40% OFF or SAVE ₹20">
+    <button onclick="addProduct()">Add Product</button>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="editModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Edit Product</h3>
+      <button class="close-btn" onclick="closeModal('editModal')">✕</button>
+    </div>
+    <label>Select Product</label>
+    <select id="editSelect" onchange="loadEditFields()"></select>
+    <label>Product Name</label>
+    <input id="editName" placeholder="Product name">
+    <label>Image URL</label>
+    <input id="editImage" placeholder="https://...">
+    <label>Description</label>
+    <textarea id="editDesc" placeholder="Description…"></textarea>
+    <label>Affiliate Link</label>
+    <input id="editLink" placeholder="https://...">
+    <div class="price-row">
+      <div>
+        <label>Current Price</label>
+        <input id="editPrice" type="number" placeholder="29.99" min="0" step="0.01">
+      </div>
+      <div>
+        <label>Original Price</label>
+        <input id="editOriginal" type="number" placeholder="49.99" min="0" step="0.01">
+      </div>
+    </div>
+    <label>Discount Label</label>
+    <input id="editDiscount" placeholder="e.g. 40% OFF">
+    <button onclick="saveEdit()">Save Changes</button>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div id="deleteModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Remove Product</h3>
+      <button class="close-btn" onclick="closeModal('deleteModal')">✕</button>
+    </div>
+    <label>Select Product to Delete</label>
+    <select id="deleteSelect"></select>
+    <button class="danger" onclick="deleteProduct()">Delete Product</button>
+  </div>
+</div>
+
+<footer>
+  <h3>Contact</h3>
+  <p>For any issues or inquiries:</p>
+  <p style="margin-top:6px;"><b id="contactEmail"></b></p>
+  <script>document.getElementById('contactEmail').textContent=['iwaschosen7even7','gmail.com'].join('@');</script>
+</footer>
+
+<script type="module">
+import { initializeApp }            from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, updateDoc, doc }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAfhD0iGv29ZB7EDt6nQgipJaTn6_y_97s",
+  authDomain: "even7official.firebaseapp.com",
+  projectId: "even7official"
+};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+let products = []; // array of {id, name, image, desc, link, price, original, discount}
+let featuredProduct = null;
+
+/* ── TOAST ── */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── MODAL HELPERS ── */
+window.closeModal = id => {
+  document.getElementById(id).classList.remove('active');
+};
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+// Close on outside click
+document.querySelectorAll('.modal').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('active'); });
+});
+
+/* ── ADMIN BUTTON ── */
+document.getElementById('adminLoginBtn').onclick = () => openModal('loginModal');
+
+/* ── LOGIN ── */
+window.login = () => {
+  const e = document.getElementById('email').value;
+  const p = document.getElementById('pass').value;
+  if (!e || !p) return toast('Enter email & password');
+  signInWithEmailAndPassword(auth, e, p)
+    .then(() => { closeModal('loginModal'); openModal('adminMenu'); })
+    .catch(() => toast('Login failed. Check credentials.'));
+};
+
+/* ── OPEN PANELS ── */
+window.openAdd    = () => { closeModal('adminMenu'); openModal('addModal'); };
+window.openDelete = () => { closeModal('adminMenu'); populateSelect('deleteSelect'); openModal('deleteModal'); };
+window.openEdit   = () => { closeModal('adminMenu'); populateSelect('editSelect'); loadEditFields(); openModal('editModal'); };
+
+/* ── POPULATE SELECT ── */
+function populateSelect(selectId) {
+  const sel = document.getElementById(selectId);
+  sel.innerHTML = '';
+  products.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.id;
+    o.textContent = p.name;
+    sel.appendChild(o);
+  });
+}
+
+/* ── LOAD EDIT FIELDS ── */
+window.loadEditFields = () => {
+  const id = document.getElementById('editSelect').value;
+  const p  = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('editName').value     = p.name     || '';
+  document.getElementById('editImage').value    = p.image    || '';
+  document.getElementById('editDesc').value     = p.desc     || '';
+  document.getElementById('editLink').value     = p.link     || '';
+  document.getElementById('editPrice').value    = p.price    || '';
+  document.getElementById('editOriginal').value = p.original || '';
+  document.getElementById('editDiscount').value = p.discount || '';
+};
+
+/* ── ADD PRODUCT ── */
+window.addProduct = async () => {
+  const name     = document.getElementById('addName').value.trim();
+  const image    = document.getElementById('addImage').value.trim();
+  const desc     = document.getElementById('addDesc').value.trim();
+  const link     = document.getElementById('addLink').value.trim();
+  const price    = document.getElementById('addPrice').value.trim();
+  const original = document.getElementById('addOriginal').value.trim();
+  const discount = document.getElementById('addDiscount').value.trim();
+
+  if (!name || !image || !link || !price) return toast('Fill required fields (*)');
+
+  await addDoc(collection(db, 'products'), { name, image, desc, link, price, original, discount });
+  closeModal('addModal');
+  // clear fields
+  ['addName','addImage','addDesc','addLink','addPrice','addOriginal','addDiscount']
+    .forEach(id => document.getElementById(id).value = '');
+  toast('Product added ✓');
+  loadProducts();
+};
+
+/* ── SAVE EDIT ── */
+window.saveEdit = async () => {
+  const id       = document.getElementById('editSelect').value;
+  const name     = document.getElementById('editName').value.trim();
+  const image    = document.getElementById('editImage').value.trim();
+  const desc     = document.getElementById('editDesc').value.trim();
+  const link     = document.getElementById('editLink').value.trim();
+  const price    = document.getElementById('editPrice').value.trim();
+  const original = document.getElementById('editOriginal').value.trim();
+  const discount = document.getElementById('editDiscount').value.trim();
+
+  if (!name || !image || !link || !price) return toast('Fill required fields');
+
+  await updateDoc(doc(db, 'products', id), { name, image, desc, link, price, original, discount });
+  closeModal('editModal');
+  toast('Product updated ✓');
+  loadProducts();
+};
+
+/* ── DELETE PRODUCT ── */
+window.deleteProduct = async () => {
+  const id = document.getElementById('deleteSelect').value;
+  if (!id) return toast('No product selected');
+  await deleteDoc(doc(db, 'products', id));
+  closeModal('deleteModal');
+  toast('Product removed ✓');
+  loadProducts();
+};
+
+/* ── FEATURED CLICK ── */
+window.featuredClick = () => {
+  if (featuredProduct?.link) window.open(featuredProduct.link, '_blank');
+};
+
+/* ── RENDER FEATURED ── */
+function renderFeatured() {
+  if (!products.length) return;
+  featuredProduct = products[Math.floor(Math.random() * products.length)];
+  const p = featuredProduct;
+
+  document.getElementById('featuredImg').src      = p.image || '';
+  document.getElementById('featuredName').textContent = p.name  || '';
+  document.getElementById('featuredDesc').textContent = p.desc  || 'Premium affiliate product.';
+
+  const priceEl    = document.getElementById('featuredPrice');
+  const origEl     = document.getElementById('featuredOriginal');
+  const discEl     = document.getElementById('featuredDiscount');
+
+  priceEl.textContent = p.price ? '₹' + parseFloat(p.price).toFixed(2) : '';
+  origEl.textContent  = p.original ? 'Was ₹' + parseFloat(p.original).toFixed(2) : '';
+  discEl.textContent  = p.discount || '';
+  discEl.style.display = p.discount ? 'inline-block' : 'none';
+
+  document.getElementById('featuredCard').style.display = '';
+}
+
+/* ── BUILD CARD ── */
+function buildCard(p, delay) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.animationDelay = delay + 'ms';
+
+  const discountTag = p.discount
+    ? `<span class="discount-tag">${p.discount}</span>` : '';
+
+  const priceNow = p.price
+    ? `<span class="price-now">₹${parseFloat(p.price).toFixed(2)}</span>` : '';
+  const priceWas = p.original
+    ? `<span class="price-was">₹${parseFloat(p.original).toFixed(2)}</span>` : '';
+  const priceSave = (p.price && p.original && parseFloat(p.original) > parseFloat(p.price))
+    ? `<span class="price-save">Save ₹${(parseFloat(p.original) - parseFloat(p.price)).toFixed(2)}</span>` : '';
+
+  card.innerHTML = `
+    <div class="card-img-wrap">
+      <img src="${p.image}" alt="${p.name}" loading="lazy">
+      ${discountTag}
+    </div>
+    <div class="card-body">
+      <h3>${p.name}</h3>
+      <p>${p.desc || 'Premium product — check it out!'}</p>
+    </div>
+    <div class="card-prices">
+      ${priceNow}${priceWas}${priceSave}
+    </div>
+    <a href="${p.link}" target="_blank" rel="noopener noreferrer">Buy Now →</a>
+  `;
+  return card;
+}
+
+/* ── LOAD PRODUCTS ── */
+async function loadProducts() {
+  document.getElementById('loadingState').style.display = 'flex';
+  document.getElementById('products').innerHTML = '';
+
+  try {
+    const snap = await getDocs(collection(db, 'products'));
+    products = [];
+
+    snap.forEach(d => products.push({ id: d.id, ...d.data() }));
+
+    document.getElementById('loadingState').style.display = 'none';
+
+    if (!products.length) {
+      document.getElementById('products').innerHTML =
+        '<p style="text-align:center;color:#aaa;padding:40px;grid-column:1/-1;">No products yet.</p>';
+      return;
+    }
+
+    const grid = document.getElementById('products');
+    products.forEach((p, i) => grid.appendChild(buildCard(p, i * 80)));
+
+    renderFeatured();
+
+  } catch (err) {
+    document.getElementById('loadingState').innerHTML =
+      '<p style="color:#c0392b;">Failed to load products. Check your connection.</p>';
+    console.error(err);
+  }
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>
